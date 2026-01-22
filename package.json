@@ -1,0 +1,31 @@
+{
+  "name": "tcp-stream",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "description": "TCP Stream Utility Package for Node.js inspired by Rust's Tokio",
+  "keywords": [
+    "nodejs",
+    "tcp",
+    "stream",
+    "streaming",
+    "networking",
+    "io",
+    "ioutil",
+    "ioutils"
+  ],
+  "main": "stream.js",
+  "author": "Benjamin Larsen",
+  "license": "MIT",
+  "repository": "github:benjamin-larsen/node-tcp-stream",
+  "bugs": {
+    "url": "https://github.com/benjamin-larsen/node-tcp-stream/issues"
+  },
+  "homepage": "https://github.com/benjamin-larsen/node-tcp-stream",
+  "engines": {
+    "node": ">=0.1.90"
+  },
+  "files": [
+    "stream.js",
+    "integers.js"
+  ]
+}
