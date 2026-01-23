@@ -53,14 +53,18 @@ class Stream {
       this.readers[0].reject(STREAM_READ_LIMIT);
       this.readers = [];
       this.close();
+
+      return true;
     }
+
+    return false;
   }
 
   _checkPause() {
     if (!this.socket) return;
 
     if (this.isPaused) {
-      this._faultEOF();
+      if (this._faultEOF()) return;
       
       if (this.bufLen < this.maxRead) {
         this.isPaused = false;
@@ -70,7 +74,7 @@ class Stream {
       }
     } else {
       if (this.bufLen >= this.maxRead) {
-        this._faultEOF();
+        if (this._faultEOF()) return;
 
         this.isPaused = true;
         this.socket.pause();
