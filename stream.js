@@ -45,12 +45,26 @@ class Stream {
     return !this.isClosed && this.eofState == NO_EOF;
   }
 
-  _faultEOF() {
+  _faultPaused() {
     if (
       this.eofState == ACTIVE_EOF
       && this.readers.length == 1
     ) {
       this.readers[0].reject(STREAM_READ_LIMIT);
+      this.readers = [];
+      this.close();
+
+      return true;
+    }
+
+    if (
+      this.readers.length >= 1
+      && this.readers[0].type === OP_READ_UNTIL
+    ) {
+      for (const reader of this.readers) {
+        reader.reject(STREAM_READ_LIMIT);
+      }
+      
       this.readers = [];
       this.close();
 
@@ -64,7 +78,7 @@ class Stream {
     if (!this.socket) return;
 
     if (this.isPaused) {
-      if (this._faultEOF()) return;
+      if (this._faultPaused()) return;
       
       if (this.bufLen < this.maxRead) {
         this.isPaused = false;
@@ -74,7 +88,7 @@ class Stream {
       }
     } else {
       if (this.bufLen >= this.maxRead) {
-        if (this._faultEOF()) return;
+        if (this._faultPaused()) return;
 
         this.isPaused = true;
         this.socket.pause();
